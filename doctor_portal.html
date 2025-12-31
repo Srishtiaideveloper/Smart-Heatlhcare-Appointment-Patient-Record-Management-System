@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard | D-Mart Healthcare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="alert alert-primary alert-dismissible fade show welcome-msg-full text-center mx-auto" role="alert" style="width: 40%;">
+  Welcome {{ doctor_name }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div class="text-end me-3 mt-2">
+  <a href="/doctor/logout" class="btn btn-danger text-white">Logout</a>
+</div>
+
+<div class="container mt-3">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} py-2">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <h4>Appointments</h4>
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Patient Name</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in appointments %}
+      <tr>
+        <td>{{ app.PatientName }}</td>
+        <td>{{ app.AppointmentDate }}</td>
+        <td>{{ app.StartTime }}</td>
+        <td>{{ app.EndTime }}</td>
+        <td>
+          {% if app.Status == 'Scheduled' %}
+            <span class="badge bg-warning text-dark">{{ app.Status }}</span>
+          {% elif app.Status == 'Completed' %}
+            <span class="badge bg-success">{{ app.Status }}</span>
+          {% elif app.Status == 'Cancelled' %}
+            <span class="badge bg-danger">{{ app.Status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if app.Status != 'Completed' %}
+            <a href="/doctor/update_status/{{ app.AppointmentID }}/Completed" class="btn btn-success btn-sm btn-action">Mark Completed</a>
+          {% endif %}
+          {% if app.Status != 'Cancelled' %}
+            <a href="/doctor/update_status/{{ app.AppointmentID }}/Cancelled" class="btn btn-danger btn-sm btn-action">Cancel</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      {% if appointments|length == 0 %}
+      <tr>
+        <td colspan="6" class="text-center">No appointments scheduled.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

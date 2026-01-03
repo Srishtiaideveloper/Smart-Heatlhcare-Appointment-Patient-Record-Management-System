@@ -39,14 +39,6 @@ Python, Flask, MySQL, Git, HTML, CSS, Bootstrap, VS Code
 
 ---
 
-## ⚙️ Setup (Quick)
-
-```bash
-git clone <repository-link>
-pip install -r requirements.txt
-python app.py
-```
----
 ## 🚀 Future Improvements
 
 Notifications for appointments and payments
